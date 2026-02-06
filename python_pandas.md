@@ -1,6 +1,3 @@
----
-
-## 🐼 Pandas Cheat Sheet (with Examples)
 
 ```python
 import pandas as pd
@@ -528,6 +525,70 @@ df = (
 * Validate **after every major step**
 
 ---
+Perfect! We can handle **leading and trailing spaces** in a single, clean **one-liner pandas solution**. Here’s the updated version:
+
+```python
+import pandas as pd
+
+def clean_column_headers(df):
+    """
+    Cleans DataFrame column headers by:
+    - Stripping leading/trailing spaces
+    - Converting to lowercase
+    - Removing special characters
+    - Replacing multiple spaces with underscores
+    - Stripping leading/trailing underscores
+    """
+    df.columns = (
+        df.columns
+        .str.strip()  # Remove leading/trailing spaces
+        .str.lower()  # Convert to lowercase
+        .str.replace(r'[^0-9a-zA-Z _]', '', regex=True)  # Remove special characters
+        .str.replace(r'\s+', '_', regex=True)  # Replace spaces with underscores
+        .str.strip('_')  # Remove leading/trailing underscores
+    )
+    return df
+
+# Example usage
+data = {
+    ' Name!  ': ['Alice', 'Bob'],
+    ' Age#': [25, 30],
+    'E-mail@ Address ': ['alice@example.com', 'bob@example.com']
+}
+
+df = pd.DataFrame(data)
+print("Before cleaning:")
+print(df)
+
+df = clean_column_headers(df)
+print("\nAfter cleaning:")
+print(df)
+```
+
+**Output:**
+
+```
+Before cleaning:
+      Name!   Age#      E-mail@ Address 
+0     Alice     25   alice@example.com
+1       Bob     30     bob@example.com
+
+After cleaning:
+    name  age  email_address
+0  Alice   25  alice@example.com
+1    Bob   30    bob@example.com
+```
+
+---
+
+✅ **What changed:**
+
+* `.str.strip()` at the start removes leading/trailing spaces before any other processing.
+* Everything else (lowercasing, removing special characters, replacing spaces, stripping underscores) stays vectorized and fast.
+
+If you want, I can make an **even shorter one-liner** that does all of this in a single `.columns = ...` without multiple `.str` calls—still fully vectorized. This can be nice for super concise scripts.
+
+Do you want me to do that?
 
 
 
